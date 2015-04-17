@@ -214,7 +214,8 @@ func (s *session) createOrKillSession(kill bool) (err error) {
 	if err != nil {
 		return err
 	}
-	s.sId = (resp[0].([]byte))
+
+	s.sId = []byte(resp[0].(string))
 
 	if h.MessageType != SESSION_RESPONSE {
 		err = fmt.Errorf("rexpro: Got msg type %d, expecting %d", h.MessageType, SESSION_RESPONSE)
@@ -362,6 +363,7 @@ func int2byte(val int) []byte {
 
 func decodeBody(body []byte) (retVal []interface{}, err error) {
 	var mh = new(codec.MsgpackHandle)
+	mh.RawToString = true
 	mh.MapType = reflect.TypeOf(map[string]interface{}(nil))
 	dec := codec.NewDecoderBytes(body, mh)
 	if e := dec.Decode(&retVal); e != nil {
