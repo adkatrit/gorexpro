@@ -136,7 +136,7 @@ func DialTimeout(address string, graphName string, connectTimeout, readTimeout, 
 	if err != nil {
 		return nil, err
 	}
-	return NewConn(c, address, readTimeout, writeTimeout), nil
+	return NewConn(c, graphName, readTimeout, writeTimeout), nil
 }
 
 // NewConn returns a new rexpro connection for the given net connection.
@@ -216,9 +216,8 @@ func (s *session) createOrKillSession(kill bool) (err error) {
 	}
 
 	s.sId = []byte(resp[0].(string))
-
 	if h.MessageType != SESSION_RESPONSE {
-		err = fmt.Errorf("rexpro: Got msg type %d, expecting %d", h.MessageType, SESSION_RESPONSE)
+		err = fmt.Errorf("rexpro: Got msg type %d, expecting %d, body: %v", h.MessageType, SESSION_RESPONSE, resp)
 	}
 	return
 }
